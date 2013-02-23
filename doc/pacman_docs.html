@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>AS-0.3301 Project document</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Poikolainen Elmeri">
+	<META NAME="CHANGED" CONTENT="20111208;11483100">
+	<META NAME="CHANGEDBY" CONTENT="Ikonen Mikko">
+</HEAD>
+<BODY LANG="fi-FI" DIR="LTR">
+<H3 ALIGN=CENTER>AS-0.3301 - project document</H3>
+<H1 ALIGN=CENTER>Aihe – <I>Multiplayer Pacman</I></H1>
+<H3>Tekijät:</H3>
+<TABLE WIDTH=380 BORDER=0 CELLPADDING=2 CELLSPACING=0>
+	<COL WIDTH=58>
+	<COL WIDTH=124>
+	<COL WIDTH=185>
+	<TR>
+		<TD WIDTH=58>
+			<P>87333H</P>
+		</TD>
+		<TD WIDTH=124>
+			<P>Severi Haverila</P>
+		</TD>
+		<TD WIDTH=185>
+			<P><A HREF="mailto:Severi.haverila@aalto.fi">Severi.haverila@aalto.fi</A></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=58>
+			<P>79677M</P>
+		</TD>
+		<TD WIDTH=124>
+			<P>Mikko Ikonen</P>
+		</TD>
+		<TD WIDTH=185>
+			<P><A HREF="mailto:Mikko.ikonen@aalto.fi">Mikko.ikonen@aalto.fi</A></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=58 SDVAL="221957" SDNUM="1035;">
+			<P>221957</P>
+		</TD>
+		<TD WIDTH=124>
+			<P>Elmeri Poikolainen</P>
+		</TD>
+		<TD WIDTH=185>
+			<P><A HREF="mailto:Heikki.poikolainen@aalto.fi">Heikki.poikolainen@aalto.fi</A></P>
+			<P><BR>
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<H3>Viimeksi päivitetty</H3>
+<P>8.12.2010</P>
+<H2>Ohjeita kääntämiseen ja käyttöön</H2>
+<P><B>Kääntäminen</B></P>
+<P><SPAN STYLE="font-weight: normal">Peli toimii Macintosh- ja
+Linux-käyttöjärjestelmissä. Olemme itse ajaneet ohjelmaa koulun
+Linux-luokissa ja Mac OS X 10.6:ssa. Pelissä on käytetty
+SFML-kirjaston versiota 1.6, joten kyseisen paketin tiedostot tulee
+olla asennettuna järjestelmässä. Tiedostot saa ladattua SFML:n
+kotisivulta. </SPAN><A HREF="http://www.sfml-dev.org/download.php"><SPAN STYLE="font-weight: normal">http://www.sfml-dev.org/download.php</SPAN></A><SPAN STYLE="font-weight: normal">
+</SPAN>
+</P>
+<P STYLE="font-weight: normal">Ohjelma käyttää seuraavia
+SFML-kirjaston paketteja: audio, graphics, window, network ja system.
+Kun tiedostot on ladattu ja purettu, niin serverin saa käännettyä
+oikeassa hakemistossa komennolla: 
+</P>
+<P STYLE="font-weight: normal">g++ -std=c++0x -pedantic -Wall -Wextra
+-g -I /kansio/jossa/on/sfml/include -L /kansio/jossa/on/sfml/lib
+-lsfml-audio -lsfml-graphics -lsfml-window -lsfml-network
+-lsfml-system -o engine GameEngine.cpp aabb.cpp gameobject.cc
+server.cc</P>
+<P STYLE="font-weight: normal">Kääntämisen jälkeen serverin saa
+ajettua komennolla: 
+</P>
+<P STYLE="font-weight: normal">LD_LIBRARY_PATH=/kansio/jossa/on/sfml/lib
+./engine</P>
+<P STYLE="font-weight: normal">Clientin saa käännettyä komennolla:</P>
+<P STYLE="font-weight: normal">g++ -std=c++0x -pedantic -Wall -Wextra
+-g -I /kansio/jossa/on/sfml/include -L /kansio/jossa/on/sfml/lib
+-lsfml-audio -lsfml-graphics -lsfml-window -lsfml-network
+-lsfml-system -o window window_main.cc client.cc gameobject.cc
+aabb.cpp</P>
+<P STYLE="font-weight: normal">Kääntämisen jälkeen clientin saa
+ajettua komennolla:</P>
+<P STYLE="font-weight: normal">LD_LIBRARY_PATH=/kansio/jossa/on/sfml/lib
+./window</P>
+<P><BR><BR>
+</P>
+<P><B>Käyttö</B></P>
+<P STYLE="font-weight: normal">Peli jakautuu kahteen osaan, serveriin
+ja clienttiin, joista kumpikin joudutaan ajamaan erikseen. Server
+käynnistetään yhdeltä koneelta, jolla se jää odottamaan peliin
+liittyviä clienttejä. Itse pelaamaan pääsee käynnistämällä
+clientin, joka aluksi halutaanko pelata vai ainoastaan seurata peliä,
+minkä jälkeen kysytään pelaajan nimi ja serverin IP-osoite. Kun
+käyttäjä on syöttänyt kunnollisen IP-osoitteen, niin esiin tulee
+lista jäljellä olevista hahmoista. Kun pelaaja valitsee niistä
+jonkin, niin serverin täytyy kuitata odotetaanko lisää pelaajia
+vaiko aloitetaanko peli heti. Jos peliin ei oteta enempään
+pelaajia, niin clientillä avautuu ikkuna ja peli alkaa. Serverin
+tehtävä on kuitata peliin tulevat pelaajat ja käynnistää peli.
+Server ja client voidaan ajaa samalla koneella. Hahmoja ohjataan
+nuolinäppäimillä. Peli päättyy kun Pac-man on syönyt kaikki
+hedelmät tai kun Pac-manin elämät ovat loppuneet. Tällöin tulee
+ilmoitus ”Game over” ja ikkunan voi sulkea, jolloin peli loppuu
+ja yhteydet katkeavat. Jos peli halutaan aloittaa alusta niin server
+ja clientit täytyy käynnistää uudelleen. Kesken pelin ikkunoita
+ei kannata sulkea, sillä tällöin kukaan ei voi pelata peliä
+loppuun asti, koska yhteydet katkeavat. Peliin voi itse tehdä omia
+kenttiä muokkaamalla valmista tekstitiedostoa.</P>
+<P STYLE="font-weight: normal">Esimerkkiajo clientistä ja
+serveristä:</P>
+<P STYLE="font-weight: normal"><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_5fa583af.png" NAME="graphics1" ALIGN=LEFT WIDTH=680 HEIGHT=417 BORDER=0><BR><BR>
+</P>
+<P STYLE="font-weight: normal; page-break-before: always">Esimerkkiajoja
+pelistä:</P>
+<P><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_231f5008.png" NAME="graphics2" ALIGN=LEFT WIDTH=680 HEIGHT=416 BORDER=0><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_m1e308975.png" NAME="graphics3" ALIGN=LEFT WIDTH=680 HEIGHT=415 BORDER=0><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P STYLE="font-weight: normal; page-break-before: always"><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_m17dddae6.png" NAME="graphics6" ALIGN=LEFT WIDTH=680 HEIGHT=383 BORDER=0><BR><BR>
+</P>
+<P STYLE="font-weight: normal">Käyttöohje:</P>
+<P><SPAN STYLE="font-weight: normal">	Ohje Serverille</SPAN>:</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Kun server käynnistetään, tulee
+	päätteelle ilmoitus serverin ip-osoitteesta. Tätä ip-osoitetta
+	käyttämällä pelaajat pystyvät yhdistämään serverille. Server
+	odottaa uusia pelaajia/katsojia niin kauan, että serverille on
+	yhdistänyt vähintään 2 pelaajaa, joista toisen pitää olla
+	pacman. Kun tarpeeksi pelaajia on yhdistänyt serverille, server
+	kysyy halutaanko odottaa lisää pelaajia. Jos kysymykseen vastataan
+	”y”, server vastaanottaa hetken uusia pelaajia, jonka jälkeen
+	se toistaa kysymyksen. Kun kaikki pelaajat ovat yhdistäneet
+	serverille, käynnistää server pelin painamalla ”n”. Tällöin
+	peli käynnistyy ja pyörii niin kauan kunnes jompi kumpi
+	osapuolista (Pacman vs Team Ghost) voittaa.</P>
+	<P STYLE="margin-bottom: 0cm"></P>
+	<P STYLE="margin-bottom: 0cm">Ohje Clientille:</P>
+</UL>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Kun client käynnistetään,
+	täytyy clientin aluksi valita, haluaako hän pelata pelissä, vai
+	olla katsoja. Jos client haluaa vain katsoa, täytyy ensin painaa
+	”s”, jonka jälkeen ohjelma kysyy clientin nimeä. Kun client on
+	kirjoittanu oman nimensä täytyy hänen enää vain ottaa rento
+	asento sohvalla, napata jääkaapista kylmä olut,ja nauttia pelin
+	seuraamisesta. Jos client haluaakin pelata, täytyy hänen valita
+	”p” ja tämän jälkeen kirjoittaa oma nimensä kun ohjelma sitä
+	kysyy. Sitten ohjelma kysyy serverin-ip osoitetta, jonka syötettyään
+	client yhdistää serveriin niin kauan kunnes yhteys on saatu
+	aikaiseksi. Tämän jälkeen client saa tiedon vapaista hahmoista,
+	joista hänen tulee valita yksi. Kun client on valintansa tehnyt ja
+	server käynnistänyt pelin, aukeaa itse peli-ikkuna. Pelissä
+	pelaaja voi liikkua painamalla nuolinappeja. Peli loppuu kun joko
+	kaikki ”hedelmät” on syöty, tai sitten Pacmanin elämät ovat
+	loppuneet. Ghostit pyrkivät syömään pacmanin, ja tällä tavoin
+	voittamaan pelin. Pacman taas pyrkii syömään pelissä olevia
+	pisteitä, joista hän myös kerryttää itselleen pisteitä.
+	Pelistä löytyy myös ”Super Fruit”:eja, jotka muuttavat
+	pacmanin 5 sekunnin ajaksi superpacmaniksi, joka pystyy syömään
+	ghosteja. Kun superfruitin vaikutus loppuu, jatkuu peli ennallaan.
+	Ghostien nopeus on kääntäen verrannollinen heidän lukumääräänsä.
+	Pelistä löytyy myös teleportit. Ainoastaan pacman voi hyödyntää
+	teleportteja, ghosteille teleport toimii seinänä.</P>
+	<P STYLE="margin-bottom: 0cm"></P>
+	<P STYLE="margin-bottom: 0cm">Ohje mapin tekemiseen:</P>
+	<LI><P STYLE="margin-bottom: 0cm">Map luetaan ”map.txt”-nimisestä
+	tekstitiedostosta. Tiedostossa p tarkoittaa pacmanin sijaintia, 1-4
+	ghostien sijaintia, 5 debuggausta varten tehdyn dummy-ghostin
+	sijaintia, ”.” syötävän pallon sijaintia, t teleportin
+	sijaintia x seinää ja – rivinvaihtoa. Mapissa voi olla joko
+	tasan 0 tai 2 teleporttia. Teleporttien tulee olla x-suuntaisia, eli
+	vasemmalta oikealle tai toisinpäin. Teleporttien toimintaa ei ole
+	määritelty ylä/ala- suunnassa.</P>
+</UL>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<H2>Pelin arkkitehtuuri</H2>
+<P>Pelin arkkitehtuuri jakautuu kahteen päähaaraan. Ensimmäisessä
+on server ja gameEngine jolla pelin logiikka ja pelin toiminnan
+ohjaaminen hoidetaan. Toisessa päähaarassa on client ja window,
+jotka edustavat yhtä pelaajaa. Windowin avulla piirretään
+peligrafiikka, soitetaan äänet ja rekisteröidään
+näppäinkomennot. Clientin tehtävänä on toimia välikätenä
+serverin ja windowin välillä viestien lähettämisessä ja
+vastaanottamisessa. Lisäksi pelissä on gameObject-luokka, joka
+kuvaa pelin hahmoja, sekä AABB-luokka, jota käytetään hahmojen
+törmäysten tarkistelussa. 
+</P>
+<P><BR><BR>
+</P>
+<P><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_m55755cbf.jpg" NAME="graphics4" ALIGN=LEFT WIDTH=680 HEIGHT=982 BORDER=0><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P STYLE="page-break-before: always">Server:</P>
+<UL>
+	<LI><P>Hallinnoi peliä.</P>
+	<LI><P>Hyväksyy pelaajat.</P>
+	<LI><P>Käynnistää pelin.</P>
+	<LI><P>Välittää tietoa clientiltä gameEnginelle ja toisinpäin.</P>
+</UL>
+<P>GameEngine:</P>
+<UL>
+	<LI><P>Pyörittää peliä.</P>
+	<LI><P>Suorittaa pelilogiikan.</P>
+	<LI><P>Lähettää uudet hahmojen tilat serverille.</P>
+	<LI><P>Alustaa pelin kartan.</P>
+</UL>
+<P>Client:</P>
+<UL>
+	<LI><P>Välittää tiedon pelitilanteesta serveriltä windowille.</P>
+	<LI><P>Välittää tiedon näppäinkomennoista windowilta
+	serverille.</P>
+</UL>
+<P>Window: 
+</P>
+<UL>
+	<LI><P>Piirtää pelin grafiikat.</P>
+	<LI><P>Soittaa pelin äänet.</P>
+	<LI><P>Rekisteröi näppäinkomennot.</P>
+	<LI><P>Lähettää näppäinkomennot clientille</P>
+</UL>
+<P>GameObject:</P>
+<UL>
+	<LI><P>Kuvaa pelihahmojen käyttäytymistä.</P>
+	<LI><P>Säilyttää tiedon olionsa tilasta.</P>
+</UL>
+<P>AABB:</P>
+<UL>
+	<LI><P>Törmäysten tarkistelu</P>
+</UL>
+<P STYLE="font-weight: normal">Mietimme pelin rakennetta pitkään ja
+se tuotti suurta päänvaivaa, koska oli vaikea hahmottaa
+tietoliikenteen toteuttamista pelissä. Kokoonnuimme aikaisessa
+vaiheessa pariin kertaan miettimään pelin yleistä rakennetta ja
+nettiliikenteen toteuttamista. Meillä oli muutamia variaatioita
+toteutukseen, joista lopulta hioutui selkein vaihtoehto, jossa peli
+on jaettu kahteen päähaaraan. Kun olimme lukeneet tietoliikenne
+toteutukseen liittyvää materiaalia oli selkeytynyt kuva, että aina
+tarvitaan pari client-server. Tästä oli luontevaa johtaa oma
+ratkaisumme, jota lähdimme laajentamaan siten, että liitimme
+clientille pelin grafiikan ja näppäinkomentojen hallinnoinnin,
+josta muodostui window. Koska oli loogista, että on vain yksi server
+ja pelilogiikka on fiksuinta suorittaa vain yhdessä paikassa, loimme
+serverin kanssa samaan kastiin luokan gameEngine. Lisämotivointina
+oli kun kuulimme, että Counter Strike -pelissä käytetään
+samanlaista periaatetta. Pelihahmoille oli hyvin selkeää toteuttaa
+oma luokkansa, jonka oheksi pelin kehittämisessä katsoimme
+hyödylliseksi toteuttaa luokan AABB hallinnoimaan hahmojen välistä
+läheisempää kanssakäymistä. 
+</P>
+<H2>Tietorakenteet ja algoritmit</H2>
+<P>Windowissa on hahmojen animaatio toteutettu, siten että on
+kutakin hahmoa kohtaan on yksi kuvatiedosto, joka on jaettu osiin.
+Osat poikkeavat toisistaan hieman, ja kun osia näyttää nopeasti
+peräkkäin, syntyy vaikutelma animaatiosta. Animaatiota varten
+windowssa on erikseen yksi funktio, jonka nimi on moveRect. Sen
+tehtävänä on siirtää kuvatiedoston osaa aina viereiseen eli
+liikuttaa freimejä. Windowin pääluupissa on indeksi, joka aina
+kasvaa jokaisella kerralla. Indeksin mukaan määräytyy animaation
+vaihe. 
+</P>
+<P>Pelaajan tietoja varten on map nimeltä playerList, jossa avaimena
+on pelaajan id ja arvona pelaajan nimi. Kaikkia hahmoja vastaa
+pelissä jokin kuva, josta on tehty oma spritensä, joita säilytetään
+mapissa sprites, jossa avaimena on hahmon id ja arvona kyseinen
+sprite. Hahmon olemassaoloa kuvaa map spriteDrawCheckList, jonka
+arvona on totuusarvo, joka kertoo, onko hahmoa enää olemassa.
+Hahmojen piirtäminen näytölle alkaa päivitetyn objektilistan
+vastaanottamisella clientiltä. Päivitetyn listan avulla spritet
+päivitetään uuteen sijaintiinsa asettamalla niiden näkymiselle
+uudet koordinaatit. Jos hahmoa ei enää ole olemassa, sen arvoksi
+spriteDrawCheckList:ssä tulee false. Lisäksi jos Pacmanin suunta
+muuttuu, niin sen kuvaa kierretään oikeaan suuntaan. Kun spritejä
+päivitysten jälkeen piirretään, luupataan sprites-map läpi ja
+aina verrataan kyseisellä id:llä hahmon olemassaolon totuusarvoon
+ja päätetään piirretäänkö. Lisäksi Window näyttää listan
+pelaajista ja heidän hahmoistaan pelikentän vieressä. Jokaisella
+pääluupin kierroksella window ensin tyhjennetään ja sitten
+piirretään kaikki spritet.</P>
+<P>Windowin alussa on pitkä lista erinäisiä alustuksia ja
+asetusten asettamista erinäisille spriteille, teksteille ja äänille.
+Aina kun huomataan päivitetyssä objektimapissa tietty muutos,
+esimerkiksi jos hedelmä on syöty, niin toistetaan ääni.</P>
+<P>Window on asetettu rekisteröimään näppäinkomennoista
+ainoastaan nuolinäppäimet. Lisäksi se reagoi ikkunan
+sulje-komentoon.</P>
+<P>GameEngine: 
+</P>
+<P STYLE="margin-bottom: 0cm">GameEngine pitää sisällään listan
+pelissä käytettävistä objekteista, sekä listan kaikista
+pelaajista. Objektit listaan luetaan tekstitiedostosta, joka kuvaa
+pelin kentän. Tekstitiedostosta luetaan erilaiset kirjaimet ja
+merkit seiniksi, hedelmiksi ja hahmoiksi switch-case rakenteella.
+GameEnginessä on myös map, jossa on avaimena gameObjectin ID ja
+playerin ID ja myös samanlainen toisinpäin.</P>
+<P STYLE="margin-bottom: 0cm">GameoObject: 
+</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">GameObjectin move funktiossa
+tarkistetaan liikutettavan hahmon siirron laillisuus. Move funktiossa
+tarkistetaan onko paikka minne hahmo haluaa seuraavaksi vapaana.
+Pelihahmot tietävät oman nykyisen ja seuraavan suunnan, jonka
+avulla tarkistetaan minne hahmo voi liikkua. Tarkistus menee
+käytännössä niin, että se tarkistaa vielä vähän pidemmälle
+mitä hahmo pystyisi liikkua, jotta hahmo liikkuisi saumattomasti
+pelikentässä.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm">AABB-struct tallentaa objektin alan
+kartassa.  AABB:ta hyödynnetään törmäystarkastelussa. 
+Törmäystarkastelun hoitaa AABBvsAABB-funktio, joka vertailee kahden
+neliön päällekkäisyyksiä sf::Rect luokkaa hyödyntäen.</P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P>Serveri ja clientin rakennetta olemme hahmotelleet kuvana.</P>
+<H2><IMG SRC="/u/38/poikolh1/unix/pacman/pacman_docs_html_41b6c4e9.png" NAME="graphics5" ALIGN=BOTTOM WIDTH=680 HEIGHT=315 BORDER=0></H2>
+<H2>Tiedetyt bugit</H2>
+<P>Toimintaa ei ole määritelty silloin kun server tai client sulkee
+ikkunan. Peli keskeytyy, jos yksikään pelaajista sulkee ikkunan.
+Jos pelaaja yrittää liittyä täyteen serveriin, hän ei pääse
+pelaamaan, mutta pelaajan ohjelma jää pyörimään. Jos kyseessä
+oleva pelaaja sulkee ohjelman, serveri kaatuu.</P>
+<P>Pelissä on maaginen bugi, joka rikkoo pelin aina silloin tällöin.
+Pacman ei kuole kunnolla. Monista testausyrityksistä huolimatta emme
+ole saaneet selville mikä se voisi olla.</P>
+<P>Pelissä on myös bugi, jonka avulla haamut voivat niin sanotusti
+”spawn kämpätä” Pac-mania. Jos haamu on Pac-manin
+aloituskohdassa kun Pac-man kuolee, niin Pac-man jatkaa kuolemista
+kunnes sen elämät ovat loppuneet.</P>
+<P>Peli vuotaa muistia erittäin paljon, emmekä keksi mitään muuta
+järkevää syytä sille kuin SFML-kirjaston valmiit funktiot.</P>
+<P>Pelin koodamista oisi voinut parantaa sopimalla yhteinen
+koodaustyyli, eritoten muuttujien nimeämisen suhteen. Esimerkiksi
+käytetäänkö isoja kirjaimia vai alaviivoja pidemmissä muuttujan
+nimissä. Parannuksena olisi myös ollut yhtenäinen, ettei englanti
+ja suomea ole käytetty sekaisin.</P>
+<P>Jos pelin ajaa Xcodessa, se antaa virheilmoituksen että pointer
+being freed was not allocated, mutta uskomme tämän johtuvan Xcode:n
+ominaisuuksista.</P>
+<H2><BR><BR>
+</H2>
+<H2 STYLE="page-break-before: always">Työn jakaminen ja aikataulu</H2>
+<P>Työt oli jaettu osa-alueisiin window(Mikko),
+server-client(Severi) ja gameEngine-gameObject(Elmeri). <SPAN STYLE="font-weight: normal">Vaikka
+olimme tälle tasolle asti suunnitelleet pelin ja kirjoittaneetkin
+sen sellaisenaan suunnitelmaan, niin silti pelin toteuttaminen alkoi
+takkuisesti, koska pelin törmäystenkäsittely tuntui aluksi
+hankalalta. Takkuisesta alusta johtuen</SPAN> teimme melkein kaiken
+porukalla. Kokoonnuimme usein maarintalolle koodaamaan yhdessä.
+Alussa olimme aika paljonkin aikataulusta jäljessä, mutta tiiviin
+yhteistyön ja maariviikonloppujen ansiosta otimme aikataulun kiinni
+ja pääsimme siinä ehkä hieman edelle. Viimeisen viikon aikana
+peli tuntui olevan jo niin hyvässä jamassa, että luulimme kaiken
+onnistuvan käden käänteessä, minkä vuoksi olikin tyhmää jättää
+dokumentaation tekemistä viimeiseksi illaksi, joka lopulta venyi
+(aamu)yöksi. Emme ole pitäneet tarkkaa kirjaa käytetystä ajasta,
+mutta karkeaksi arvioksi voimme sanoa, että olemme yksilötasolla
+tehneet reilusti enemmän kuin projektityöhön varatut 60 tuntia.
+Jokainen on luultavasti tehnyt projektiin saman verran työtä. 
+</P>
+<P>Koska koodasimme paljon yhdessä oli siis luonnollista, että
+kommunikoimme kasvotusten, muulloin käytimme IRC:tä.</P>
+<H2> Muutokset alkuperäiseen suunitelmaan</H2>
+<P>Lopullinen peli noudattaa aika hyvin alussa tehtyä suunnitelmaa.
+Poikkeavaa on ettei window ole luokka vaan c-tiedosto, jossa on yksi
+funktio ja iso main-funktio. Emme keksineet järkevää toteutus
+tapaa tehdä windowsta luokkaa, koska sen toiminta on hieman
+poikkeavaa verrattuna muihin projektin osiin.</P>
+<P>Ylimääräisen luokkana toteutimme AABB:n, joka huolehtii
+hahmojen törmäyksistä. 
+</P>
+<P>Toisin kuin aluksi suunnittelimme, keskityimme ohjelman
+testaamiseen kokonaisuutena alusta lähtien. Aluksi pyrimme saamaan
+Pac-manin liikkumaan serverin välityksellä niin, että yksi pelaaja
+pystyi sitä ohjaamaan. Tämän jälkeen lisäsimme pelaajien
+lukumäärää ja aloitimme pelilogiikan suunnittelemisen ja
+testaamisen.</P>
+<P>GameObject-luokka sai projektin edetessä uusia ominaisuuksia,
+joita emme olleet alunperin ajatelleet. Näistä mainittakoon mm.
+current- ja previous-state sekä score.</P>
+<P>Emme myöskään toteuttaneet chat-ominaisuutta, jonka olimme
+ajatelleet toteuttaa, jos aika riittää. Syy tähän oli pääasiassa
+se, että SFML-kirjasto ei välttämättä tarjonnut parhaita
+mahdollisuuksia chatin toteuttamiseen. Jos olisimme chatin
+toteuttaneet, olisimme todennäköisesti joutuneet kääntymään
+Qt-kirjaston puoleen, ja muutenkin muuttamaan nettiliikennettä
+perusteellisesti.Teimme suunniteltua enemmän yhteistyötä.</P>
+<P>Mielestämme suunnitelma oli hyvä. Periaatteessa pelin
+suunnitelman olisi voinut olla hieman vähemmän abstraktimpi, mutta
+toisaalta ajatuksemme konkretisoituivat vasta peliä koodatessa. 
+</P>
+<H2>Viitaukset</H2>
+<P><A HREF="http://www.tonypa.pri.ee/tbw/tut05.html">http://www.tonypa.pri.ee/tbw/tut05.html</A>
+– Käytimme tätä apuna pelilogiikkaa suunniteltaessa</P>
+<P><A HREF="http://www.sfml-dev.org/wiki/en/sources/frame_anim_animated">http://www.sfml-dev.org/wiki/en/sources/frame_anim_animated</A>
+– Animaatiot</P>
+<P><A HREF="http://www.sfml-dev.org/tutorials/1.6/">http://www.sfml-dev.org/tutorials/1.6/</A>	-Tutoriaalit
+käyttämiimme SFML-luokkiin</P>
+<P><A HREF="http://www.sfml-dev.org/documentation/1.6/annotated.php">http://www.sfml-dev.org/documentation/1.6/annotated.php</A>	
+-Luokkadokumentaatio</P>
+<P><A HREF="http://cplusplus.com/">http://cplusplus.com/</A>	-C++
+referenssi</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>
